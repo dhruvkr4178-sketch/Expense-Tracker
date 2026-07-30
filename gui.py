@@ -9,7 +9,7 @@ ctk.set_default_color_theme("blue")  # blue / green / dark-blue
 app = ctk.CTk()
 expenses = []
 app.title("Expense Tracker")
-app.geometry("700x500")
+app.geometry("800x800")
 
 # Heading
 title = ctk.CTkLabel(
@@ -86,7 +86,75 @@ add_button = ctk.CTkButton(
 
 add_button.pack(pady=15)
 
+# Total Expense Label
+total_label = ctk.CTkLabel(
+    app,
+    text="Total Expense: ₹0",
+    font=("Arial", 18, "bold")
+)
 
+total_label.pack(pady=5)
+
+
+# Calculate Total Expense
+def calculate_total():
+
+    total = 0
+
+    for item in expenses:
+        total = total + item["amount"]
+
+    total_label.configure(
+        text=f"Total Expense: ₹{total}"
+    )
+
+
+# Total Expense Button
+total_button = ctk.CTkButton(
+    app,
+    text="Total Expense",
+    command=calculate_total
+)
+
+total_button.pack(pady=10)
+
+
+# Delete Selected Expense
+def delete_expense():
+
+    selected_item = tree.selection()
+
+    if selected_item:
+        item = selected_item[0]
+
+        # Get selected row data
+        values = tree.item(item)["values"]
+
+        # Remove from expenses list
+        for expense in expenses:
+            if (
+                expense["date"] == values[0]
+                and expense["category"] == values[1]
+                and expense["description"] == values[2]
+                and expense["amount"] == values[3]
+            ):
+                expenses.remove(expense)
+                break
+
+        # Remove from table
+        tree.delete(item)
+
+        # Update total after delete
+        calculate_total()
+
+# Delete Button
+delete_button = ctk.CTkButton(
+    app,
+    text="Delete Selected Expense",
+    command=delete_expense
+)
+
+delete_button.pack(pady=10)
 
 columns = ("Date", "Category", "Description", "Amount")
 
