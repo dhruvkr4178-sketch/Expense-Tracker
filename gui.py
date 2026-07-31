@@ -8,6 +8,7 @@ ctk.set_default_color_theme("blue")  # blue / green / dark-blue
 # Window
 app = ctk.CTk()
 expenses = []
+tree = None
 app.title("Expense Tracker")
 app.geometry("800x800")
 
@@ -66,12 +67,13 @@ def add_expense():
     }
 
     expenses.append(expense)
+    refresh_table()
 
-    tree.insert(
-    "",
-    "end",
-    values=(date, category, description, amount)
-)
+#     tree.insert(
+#     "",
+#     "end",
+#     values=(date, category, description, amount)
+# )
 
     date_entry.delete(0, "end")
     category_entry.delete(0, "end")
@@ -148,28 +150,75 @@ def delete_expense():
         calculate_total()
 
 # Delete Button
-delete_button = ctk.CTkButton(
+# delete_button = ctk.CTkButton(
+#     app,
+#     text="Delete Selected Expense",
+#     command=delete_expense
+# )
+
+# delete_button.pack(pady=10)
+
+
+
+def refresh_table():
+
+    if tree is None:
+        return
+
+    # Purani rows delete karo
+    for item in tree.get_children():
+        tree.delete(item)
+
+    # Nayi rows add karo
+    for expense in expenses:
+        tree.insert(
+            "",
+            "end",
+            values=(
+                expense["date"],
+                expense["category"],
+                expense["description"],
+                expense["amount"]
+            )
+        )
+
+
+
+
+
+def view_expenses():
+
+    global tree
+
+    window = ctk.CTkToplevel(app)
+    window.title("All Expenses")
+    window.geometry("750x450")
+
+    columns = ("Date", "Category", "Description", "Amount")
+
+    tree = ttk.Treeview(window, columns=columns, show="headings", height=15)
+
+    tree.heading("Date", text="Date")
+    tree.heading("Category", text="Category")
+    tree.heading("Description", text="Description")
+    tree.heading("Amount", text="Amount")
+
+    tree.column("Date", width=130)
+    tree.column("Category", width=150)
+    tree.column("Description", width=250)
+    tree.column("Amount", width=120)
+
+    tree.pack(fill="both", expand=True, padx=20, pady=20)
+
+    # Show all expenses
+    refresh_table()
+
+view_button = ctk.CTkButton(
     app,
-    text="Delete Selected Expense",
-    command=delete_expense
+    text="View Expenses",
+    command=view_expenses
 )
 
-delete_button.pack(pady=10)
-
-columns = ("Date", "Category", "Description", "Amount")
-
-tree = ttk.Treeview(app, columns=columns, show="headings", height=8)
-
-tree.heading("Date", text="Date")
-tree.heading("Category", text="Category")
-tree.heading("Description", text="Description")
-tree.heading("Amount", text="Amount")
-
-tree.column("Date", width=130)
-tree.column("Category", width=150)
-tree.column("Description", width=250)
-tree.column("Amount", width=120)
-
-tree.pack(pady=20, fill="x", padx=20)
+view_button.pack(pady=10)
 
 app.mainloop()
