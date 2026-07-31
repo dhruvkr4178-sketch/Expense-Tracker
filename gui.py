@@ -9,6 +9,7 @@ ctk.set_default_color_theme("blue")  # blue / green / dark-blue
 app = ctk.CTk()
 expenses = []
 tree = None
+view_window = None
 app.title("Expense Tracker")
 app.geometry("800x800")
 
@@ -188,15 +189,24 @@ def refresh_table():
 
 def view_expenses():
 
-    global tree
+    global tree, view_window
 
-    window = ctk.CTkToplevel(app)
-    window.title("All Expenses")
-    window.geometry("750x450")
+    if view_window is not None and view_window.winfo_exists():
+        view_window.lift()
+        view_window.focus_force()
+        refresh_table()
+        return
+
+    view_window = ctk.CTkToplevel(app)
+    view_window.title("All Expenses")
+    view_window.geometry("750x450")
+    view_window.after(100, view_window.lift)
+    view_window.after(100, view_window.focus_force)
+    view_window.after(100, lambda: view_window.attributes("-topmost", False))
 
     columns = ("Date", "Category", "Description", "Amount")
 
-    tree = ttk.Treeview(window, columns=columns, show="headings", height=15)
+    tree = ttk.Treeview(view_window, columns=columns, show="headings", height=15)
 
     tree.heading("Date", text="Date")
     tree.heading("Category", text="Category")
