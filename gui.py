@@ -125,27 +125,30 @@ total_button.pack(pady=10)
 # Delete Selected Expense
 def delete_expense():
 
+
     selected_item = tree.selection()
+    
 
     if selected_item:
         item = selected_item[0]
 
         # Get selected row data
         values = tree.item(item)["values"]
+        
 
         # Remove from expenses list
         for expense in expenses:
             if (
-                expense["date"] == values[0]
-                and expense["category"] == values[1]
-                and expense["description"] == values[2]
-                and expense["amount"] == values[3]
+                str(expense["date"]) == str(values[0])
+                and str(expense["category"]) == str(values[1])
+                and str(expense["description"]) == str(values[2])
+                and float(expense["amount"]) == float(values[3])
             ):
                 expenses.remove(expense)
                 break
 
         # Remove from table
-        tree.delete(item)
+        refresh_table()
 
         # Update total after delete
         calculate_total()
@@ -219,6 +222,17 @@ def view_expenses():
     tree.column("Amount", width=120)
 
     tree.pack(fill="both", expand=True, padx=20, pady=20)
+
+
+    delete_button = ctk.CTkButton(
+       view_window,
+       text="Delete Selected",
+       command=delete_expense
+
+
+)
+    print(delete_button.cget("command"))
+    delete_button.pack(pady=10)
 
     # Show all expenses
     refresh_table()
