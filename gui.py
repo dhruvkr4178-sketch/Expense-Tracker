@@ -10,6 +10,7 @@ app = ctk.CTk()
 expenses = []
 tree = None
 view_window = None
+selected_expense = None
 app.title("Expense Tracker")
 app.geometry("800x800")
 
@@ -89,6 +90,10 @@ add_button = ctk.CTkButton(
 
 add_button.pack(pady=15)
 
+
+
+
+
 # Total Expense Label
 total_label = ctk.CTkLabel(
     app,
@@ -146,12 +151,11 @@ def delete_expense():
             ):
                 expenses.remove(expense)
                 break
+    # Remove from table
+    refresh_table()
 
-        # Remove from table
-        refresh_table()
-
-        # Update total after delete
-        calculate_total()
+    # Update total after delete
+    calculate_total()
 
 # Delete Button
 # delete_button = ctk.CTkButton(
@@ -162,7 +166,78 @@ def delete_expense():
 
 # delete_button.pack(pady=10)
 
+def edit_expense():
 
+    print("Edit button clicked")
+
+    global selected_expense
+
+    selected_item = tree.selection()
+
+    print(selected_item)
+
+    if not selected_item:
+        return
+
+    item = selected_item[0]
+
+    values = tree.item(item)["values"]
+
+    print(values)
+
+    for expense in expenses:
+
+        if (
+            str(expense["date"]) == str(values[0])
+            and str(expense["category"]) == str(values[1])
+            and str(expense["description"]) == str(values[2])
+            and float(expense["amount"]) == float(values[3])
+        ):
+
+            selected_expense = expense
+
+            print("Matched:", selected_expense)
+            break
+
+    date_entry.delete(0, "end")
+    date_entry.insert(0, selected_expense["date"])
+
+    category_entry.delete(0, "end")
+    category_entry.insert(0, selected_expense["category"])
+
+    description_entry.delete(0, "end")
+    description_entry.insert(0, selected_expense["description"])
+
+    amount_entry.delete(0, "end")
+    amount_entry.insert(0, selected_expense["amount"])
+
+    print(date_entry.get())
+    print(category_entry.get())
+    print(description_entry.get())
+    print(amount_entry.get())   
+
+
+def update_expense():
+
+    global selected_expense
+
+    if selected_expense is None:
+        return
+
+    selected_expense["date"] = date_entry.get()
+    selected_expense["category"] = category_entry.get()
+    selected_expense["description"] = description_entry.get()
+    selected_expense["amount"] = float(amount_entry.get())
+
+    refresh_table()
+    calculate_total()
+
+    date_entry.delete(0, "end")
+    category_entry.delete(0, "end")
+    description_entry.delete(0, "end")
+    amount_entry.delete(0, "end")
+
+    selected_expense = None
 
 def refresh_table():
 
@@ -228,11 +303,18 @@ def view_expenses():
        view_window,
        text="Delete Selected",
        command=delete_expense
-
-
 )
-    print(delete_button.cget("command"))
+    
     delete_button.pack(pady=10)
+
+
+    edit_button = ctk.CTkButton(
+    view_window,
+    text="Edit Selected",
+    command=edit_expense
+)
+
+    edit_button.pack(pady=10)
 
     # Show all expenses
     refresh_table()
@@ -244,5 +326,13 @@ view_button = ctk.CTkButton(
 )
 
 view_button.pack(pady=10)
+
+update_button = ctk.CTkButton(
+    app,
+    text="Update Expense",
+    command=update_expense
+)
+
+update_button.pack(pady=5)
 
 app.mainloop()
