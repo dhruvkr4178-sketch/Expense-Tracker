@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import ttk
+import csv
 
 # Theme
 ctk.set_appearance_mode("dark")      # dark / light
@@ -262,7 +263,24 @@ def refresh_table():
         )
 
 
+def save_expenses():
 
+    with open("expenses.csv", "w", newline="") as file:
+
+        writer = csv.writer(file)
+
+        writer.writerow(
+            ["Date", "Category", "Description", "Amount"]
+        )
+
+        for expense in expenses:
+
+            writer.writerow([
+                expense["date"],
+                expense["category"],
+                expense["description"],
+                expense["amount"]
+            ])
 
 
 def view_expenses():
@@ -334,5 +352,14 @@ update_button = ctk.CTkButton(
 )
 
 update_button.pack(pady=5)
+
+save_button = ctk.CTkButton(
+    app,
+    text="Save Expenses",
+    command=save_expenses
+)
+
+save_button.pack(pady=5)
+
 
 app.mainloop()
