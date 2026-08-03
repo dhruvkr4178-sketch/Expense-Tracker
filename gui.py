@@ -282,6 +282,32 @@ def save_expenses():
                 expense["amount"]
             ])
 
+def load_expenses():
+
+    global expenses
+
+    try:
+
+        with open("expenses.csv", "r") as file:
+
+            reader = csv.DictReader(file)
+
+            expenses = []
+
+            for row in reader:
+
+                expenses.append({
+                    "date": row["Date"],
+                    "category": row["Category"],
+                    "description": row["Description"],
+                    "amount": float(row["Amount"])
+                })
+
+    except FileNotFoundError:
+
+        expenses = []
+
+
 
 def view_expenses():
 
@@ -361,5 +387,6 @@ save_button = ctk.CTkButton(
 
 save_button.pack(pady=5)
 
+load_expenses()
 
 app.mainloop()
