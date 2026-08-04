@@ -25,6 +25,104 @@ title = ctk.CTkLabel(
 )
 title.pack(pady=20)
 
+dashboard_frame = ctk.CTkFrame(app)
+
+dashboard_frame.pack(
+    fill="x",
+    padx=20,
+    pady=10
+)
+
+expense_card = ctk.CTkFrame(
+    dashboard_frame,
+    width=180,
+    height=90
+)
+
+expense_card.pack(
+    side="left",
+    padx=10,
+    pady=10,
+    expand=True,
+    fill="both"
+)
+
+expense_title = ctk.CTkLabel(
+    expense_card,
+    text="Total Expense",
+    font=("Arial",16,"bold")
+)
+
+expense_title.pack(pady=(10,5))
+
+expense_value = ctk.CTkLabel(
+    expense_card,
+    text="₹0",
+    font=("Arial",22,"bold")
+)
+
+expense_value.pack()
+
+records_card = ctk.CTkFrame(
+    dashboard_frame,
+    width=180,
+    height=90
+)
+
+records_card.pack(
+    side="left",
+    padx=10,
+    pady=10,
+    expand=True,
+    fill="both"
+)
+
+records_title = ctk.CTkLabel(
+    records_card,
+    text="Total Records",
+    font=("Arial",16,"bold")
+)
+
+records_title.pack(pady=(10,5))
+
+records_value = ctk.CTkLabel(
+    records_card,
+    text="0",
+    font=("Arial",22,"bold")
+)
+
+records_value.pack()
+
+categories_card = ctk.CTkFrame(
+    dashboard_frame,
+    width=180,
+    height=90
+)
+
+categories_card.pack(
+    side="left",
+    padx=10,
+    pady=10,
+    expand=True,
+    fill="both"
+)
+
+categories_title = ctk.CTkLabel(
+    categories_card,
+    text="Categories",
+    font=("Arial",16,"bold")
+)
+
+categories_title.pack(pady=(10,5))
+
+categories_value = ctk.CTkLabel(
+    categories_card,
+    text="0",
+    font=("Arial",22,"bold")
+)
+
+categories_value.pack()
+
 # Date
 date_label = ctk.CTkLabel(app, text="Date")
 date_label.pack()
@@ -74,6 +172,7 @@ def add_expense():
     expenses.append(expense)
     save_expenses()
     refresh_table()
+    update_dashboard()
 
 #     tree.insert(
 #     "",
@@ -131,6 +230,34 @@ total_button = ctk.CTkButton(
 total_button.pack(pady=10)
 
 
+
+def update_dashboard():
+
+    total = 0
+
+    for expense in expenses:
+        total += expense["amount"]
+
+    expense_value.configure(
+        text=f"₹{total}"
+    )
+
+    records_value.configure(
+        text=str(len(expenses))
+    )
+
+    categories = set()
+
+    for expense in expenses:
+        categories.add(expense["category"])
+
+    categories_value.configure(
+        text=str(len(categories))
+    )
+
+
+
+
 # Delete Selected Expense
 def delete_expense():
 
@@ -159,6 +286,7 @@ def delete_expense():
     refresh_table()
     save_expenses()
     calculate_total()
+    update_dashboard()
 
 # Delete Button
 # delete_button = ctk.CTkButton(
@@ -235,6 +363,7 @@ def update_expense():
     refresh_table()
     save_expenses()
     calculate_total()
+    update_dashboard()
 
     date_entry.delete(0, "end")
     category_entry.delete(0, "end")
@@ -309,6 +438,7 @@ def load_expenses():
     except FileNotFoundError:
 
         expenses = []
+    update_dashboard()
 
 def search_expense():
 
