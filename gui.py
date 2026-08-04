@@ -504,6 +504,38 @@ def show_pie_chart():
 
     plt.show()
 
+
+def show_bar_chart():
+
+    monthly_expenses = {}
+
+    for expense in expenses:
+
+        month = expense["date"]
+
+        amount = expense["amount"]
+
+        if month in monthly_expenses:
+            monthly_expenses[month] += amount
+        else:
+            monthly_expenses[month] = amount
+
+    plt.figure(figsize=(8,5))
+
+    plt.bar(
+        monthly_expenses.keys(),
+        monthly_expenses.values()
+    )
+
+    plt.title("Expense Report")
+    plt.xlabel("Date")
+    plt.ylabel("Amount (₹)")
+
+    plt.tight_layout()
+
+    plt.show()
+
+
 def view_expenses():
 
     global tree, view_window , search_entry
@@ -629,7 +661,13 @@ chart_button = ctk.CTkButton(
 
 chart_button.pack(pady=5)
 
+bar_chart_button = ctk.CTkButton(
+    app,
+    text="Show Bar Chart",
+    command=show_bar_chart
+)
 
+bar_chart_button.pack(pady=5)
 
 load_expenses()
 
