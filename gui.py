@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import ttk
 import csv
+import matplotlib.pyplot as plt
 
 # Theme
 ctk.set_appearance_mode("dark")      # dark / light
@@ -340,6 +341,34 @@ def search_expense():
                 )
             )
 
+
+
+def show_pie_chart():
+
+    categories = {}
+
+    for expense in expenses:
+
+        category = expense["category"]
+        amount = expense["amount"]
+
+        if category in categories:
+            categories[category] += amount
+        else:
+            categories[category] = amount
+
+    plt.figure(figsize=(6, 6))
+
+    plt.pie(
+        categories.values(),
+        labels=categories.keys(),
+        autopct="%1.1f%%"
+    )
+
+    plt.title("Expense by Category")
+
+    plt.show()
+
 def view_expenses():
 
     global tree, view_window , search_entry
@@ -448,6 +477,16 @@ save_button = ctk.CTkButton(
 )
 
 save_button.pack(pady=5)
+
+chart_button = ctk.CTkButton(
+    app,
+    text="Show Pie Chart",
+    command=show_pie_chart
+)
+
+chart_button.pack(pady=5)
+
+
 
 load_expenses()
 
