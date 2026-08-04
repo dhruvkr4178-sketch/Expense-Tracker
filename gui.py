@@ -472,7 +472,11 @@ def search_expense():
                 )
             )
 
+def clear_search():
 
+    search_entry.delete(0, "end")
+
+    refresh_table()
 
 def show_pie_chart():
 
@@ -552,6 +556,14 @@ def view_expenses():
     )
     
     search_button.pack(pady=5)
+
+    clear_button = ctk.CTkButton(
+    view_window,
+    text="Clear Search",
+    command=clear_search
+)
+
+    clear_button.pack(pady=5)
 
     tree = ttk.Treeview(
     view_window,
