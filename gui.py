@@ -11,6 +11,7 @@ app = ctk.CTk()
 expenses = []
 tree = None
 view_window = None
+search_entry = None
 selected_expense = None
 app.title("Expense Tracker")
 app.geometry("800x800")
@@ -307,11 +308,41 @@ def load_expenses():
 
         expenses = []
 
+def search_expense():
 
+    keyword = search_entry.get().lower()
+
+    if tree is None:
+        return
+
+    # Table clear karo
+    for item in tree.get_children():
+        tree.delete(item)
+
+    # Matching expenses dikhao
+    for expense in expenses:
+
+        if (
+            keyword in expense["date"].lower()
+            or keyword in expense["category"].lower()
+            or keyword in expense["description"].lower()
+            or keyword in str(expense["amount"])
+        ):
+
+            tree.insert(
+                "",
+                "end",
+                values=(
+                    expense["date"],
+                    expense["category"],
+                    expense["description"],
+                    expense["amount"]
+                )
+            )
 
 def view_expenses():
 
-    global tree, view_window
+    global tree, view_window , search_entry
 
     if view_window is not None and view_window.winfo_exists():
         view_window.lift()
@@ -340,8 +371,39 @@ def view_expenses():
     tree.column("Description", width=250)
     tree.column("Amount", width=120)
 
+    search_label = ctk.CTkLabel(
+        view_window,
+        text="Search"
+    )
+    
+    search_label.pack()
+    
+    search_entry = ctk.CTkEntry(
+        view_window,
+        width=300
+    )
+    
+    search_entry.pack(pady=5)
+    
+    search_button = ctk.CTkButton(
+        view_window,
+        text="Search",
+        command=search_expense
+    )
+    
+    search_button.pack(pady=5)
+
+    tree = ttk.Treeview(
+    view_window,
+    columns=columns,
+    show="headings",
+    height=15
+)
+    
     tree.pack(fill="both", expand=True, padx=20, pady=20)
 
+
+    
 
     delete_button = ctk.CTkButton(
        view_window,
