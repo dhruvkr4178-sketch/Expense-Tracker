@@ -72,6 +72,7 @@ def add_expense():
     }
 
     expenses.append(expense)
+    save_expenses()
     refresh_table()
 
 #     tree.insert(
@@ -154,10 +155,9 @@ def delete_expense():
             ):
                 expenses.remove(expense)
                 break
-    # Remove from table
+    
     refresh_table()
-
-    # Update total after delete
+    save_expenses()
     calculate_total()
 
 # Delete Button
@@ -233,6 +233,7 @@ def update_expense():
     selected_expense["amount"] = float(amount_entry.get())
 
     refresh_table()
+    save_expenses()
     calculate_total()
 
     date_entry.delete(0, "end")
@@ -470,13 +471,13 @@ update_button = ctk.CTkButton(
 
 update_button.pack(pady=5)
 
-save_button = ctk.CTkButton(
-    app,
-    text="Save Expenses",
-    command=save_expenses
-)
+# save_button = ctk.CTkButton(
+#     app,
+#     text="Save Expenses",
+#     command=save_expenses
+# )
 
-save_button.pack(pady=5)
+# save_button.pack(pady=5)
 
 chart_button = ctk.CTkButton(
     app,
