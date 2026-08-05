@@ -17,13 +17,14 @@ filter_menu = None
 search_entry = None
 selected_expense = None
 app.title("Expense Tracker")
-app.geometry("800x800")
+app.geometry("900x850")
+app.minsize(900, 800)
 
 # Heading
 title = ctk.CTkLabel(
     app,
-    text="Expense Tracker",
-    font=("Arial", 25, "bold")
+    text="💰 Expense Tracker",
+    font=("Arial", 30, "bold")
 )
 title.pack(pady=20)
 
@@ -37,8 +38,8 @@ dashboard_frame.pack(
 
 expense_card = ctk.CTkFrame(
     dashboard_frame,
-    width=180,
-    height=90
+    width=220,
+    height=110
 )
 
 expense_card.pack(
@@ -52,23 +53,23 @@ expense_card.pack(
 expense_title = ctk.CTkLabel(
     expense_card,
     text="Total Expense",
-    font=("Arial",16,"bold")
+    font=("Arial",18,"bold")
 )
 
-expense_title.pack(pady=(10,5))
+expense_title.pack(pady=(5,15))
 
 expense_value = ctk.CTkLabel(
     expense_card,
     text="₹0",
-    font=("Arial",22,"bold")
+    font=("Arial",28,"bold")
 )
 
 expense_value.pack()
 
 records_card = ctk.CTkFrame(
     dashboard_frame,
-    width=180,
-    height=90
+    width=220,
+    height=110
 )
 
 records_card.pack(
@@ -82,23 +83,23 @@ records_card.pack(
 records_title = ctk.CTkLabel(
     records_card,
     text="Total Records",
-    font=("Arial",16,"bold")
+    font=("Arial",18,"bold")
 )
 
-records_title.pack(pady=(10,5))
+records_title.pack(pady=(5,15))
 
 records_value = ctk.CTkLabel(
     records_card,
     text="0",
-    font=("Arial",22,"bold")
+    font=("Arial",28,"bold")
 )
 
 records_value.pack()
 
 categories_card = ctk.CTkFrame(
     dashboard_frame,
-    width=180,
-    height=90
+    width=220,
+    height=110
 )
 
 categories_card.pack(
@@ -112,15 +113,15 @@ categories_card.pack(
 categories_title = ctk.CTkLabel(
     categories_card,
     text="Categories",
-    font=("Arial",16,"bold")
+    font=("Arial",18,"bold")
 )
 
-categories_title.pack(pady=(10,5))
+categories_title.pack(pady=(5,15))
 
 categories_value = ctk.CTkLabel(
     categories_card,
     text="0",
-    font=("Arial",22,"bold")
+    font=("Arial",28,"bold")
 )
 
 categories_value.pack()
@@ -129,28 +130,28 @@ categories_value.pack()
 date_label = ctk.CTkLabel(app, text="Date")
 date_label.pack()
 
-date_entry = ctk.CTkEntry(app, width=300)
+date_entry = ctk.CTkEntry(app, width=400)
 date_entry.pack(pady=5)
 
 # Category
 category_label = ctk.CTkLabel(app, text="Category")
 category_label.pack()
 
-category_entry = ctk.CTkEntry(app, width=300)
+category_entry = ctk.CTkEntry(app, width=400)
 category_entry.pack(pady=5)
 
 # Description
 description_label = ctk.CTkLabel(app, text="Description")
 description_label.pack()
 
-description_entry = ctk.CTkEntry(app, width=300)
+description_entry = ctk.CTkEntry(app, width=400)
 description_entry.pack(pady=5)
 
 # Amount
 amount_label = ctk.CTkLabel(app, text="Amount")
 amount_label.pack()
 
-amount_entry = ctk.CTkEntry(app, width=300)
+amount_entry = ctk.CTkEntry(app, width=400)
 amount_entry.pack(pady=10)
 
 
@@ -174,6 +175,7 @@ def add_expense():
     expenses.append(expense)
     save_expenses()
     refresh_table()
+    #calculate_total()  
     update_dashboard()
 
 #     tree.insert(
@@ -190,46 +192,50 @@ def add_expense():
 add_button = ctk.CTkButton(
     app,
     text="Add Expense",
-    command=add_expense
+    command=add_expense,
+    width=220,
+    height=40
 )
 
-add_button.pack(pady=15)
+add_button.pack(pady=10)
 
 
 
 
 
 # Total Expense Label
-total_label = ctk.CTkLabel(
-    app,
-    text="Total Expense: ₹0",
-    font=("Arial", 18, "bold")
-)
+# total_label = ctk.CTkLabel(
+#     app,
+#     text="Total Expense: ₹0",
+#     font=("Arial", 18, "bold")
+# )
 
-total_label.pack(pady=5)
+# total_label.pack(pady=8)
 
 
 # Calculate Total Expense
-def calculate_total():
+# def calculate_total():
 
-    total = 0
+#     total = 0
 
-    for item in expenses:
-        total = total + item["amount"]
+#     for item in expenses:
+#         total = total + item["amount"]
 
-    total_label.configure(
-        text=f"Total Expense: ₹{total}"
-    )
+#     total_label.configure(
+#         text=f"Total Expense: ₹{total}"
+#     )
 
 
 # Total Expense Button
-total_button = ctk.CTkButton(
-    app,
-    text="Total Expense",
-    command=calculate_total
-)
+# total_button = ctk.CTkButton(
+#     app,
+#     text="Total Expense",
+#     command=calculate_total,
+#     width=220,
+#     height=40
+# )
 
-total_button.pack(pady=10)
+# total_button.pack(pady=8)
 
 
 
@@ -287,7 +293,7 @@ def delete_expense():
     
     refresh_table()
     save_expenses()
-    calculate_total()
+    #calculate_total()
     update_dashboard()
 
 # Delete Button
@@ -364,7 +370,7 @@ def update_expense():
 
     refresh_table()
     save_expenses()
-    calculate_total()
+    #calculate_total()
     update_dashboard()
 
     date_entry.delete(0, "end")
@@ -576,7 +582,7 @@ def view_expenses():
 
     view_window = ctk.CTkToplevel(app)
     view_window.title("All Expenses")
-    view_window.geometry("750x450")
+    view_window.geometry("900x700")
     view_window.after(100, view_window.lift)
     view_window.after(100, view_window.focus_force)
     view_window.after(100, lambda: view_window.attributes("-topmost", False))
@@ -612,7 +618,9 @@ def view_expenses():
     search_button = ctk.CTkButton(
         view_window,
         text="Search",
-        command=search_expense
+        command=search_expense,
+        width=220,
+        height=40
     )
     
     search_button.pack(pady=5)
@@ -620,17 +628,14 @@ def view_expenses():
     clear_button = ctk.CTkButton(
     view_window,
     text="Clear Search",
-    command=clear_search
+    command=clear_search,
+    width=220,
+    height=40
 )
 
     clear_button.pack(pady=5)
 
-    tree = ttk.Treeview(
-    view_window,
-    columns=columns,
-    show="headings",
-    height=15
-)
+  
 
 
     global filter_var, filter_menu
@@ -655,7 +660,10 @@ def view_expenses():
     view_window,
     variable=filter_var,
     values=categories,
-    command=filter_expense
+    command=filter_expense,
+    width=220,
+    height=40
+
 )
 
     filter_menu.pack(pady=5)
@@ -670,19 +678,23 @@ def view_expenses():
     delete_button = ctk.CTkButton(
        view_window,
        text="Delete Selected",
-       command=delete_expense
+       command=delete_expense,
+       width=220,
+       height=40
 )
     
-    delete_button.pack(pady=10)
+    delete_button.pack(pady=(10,5))
 
 
     edit_button = ctk.CTkButton(
     view_window,
     text="Edit Selected",
-    command=edit_expense
+    command=edit_expense,
+    width=220,
+    height=40
 )
 
-    edit_button.pack(pady=10)
+    edit_button.pack(pady=(5,10))
 
     # Show all expenses
     refresh_table()
@@ -690,18 +702,22 @@ def view_expenses():
 view_button = ctk.CTkButton(
     app,
     text="View Expenses",
-    command=view_expenses
+    command=view_expenses,
+    width=220,
+    height=40
 )
 
-view_button.pack(pady=10)
+view_button.pack(pady=8)
 
 update_button = ctk.CTkButton(
     app,
     text="Update Expense",
-    command=update_expense
+    command=update_expense,
+    width=220,
+    height=40
 )
 
-update_button.pack(pady=5)
+update_button.pack(pady=8)
 
 # save_button = ctk.CTkButton(
 #     app,
@@ -714,18 +730,22 @@ update_button.pack(pady=5)
 chart_button = ctk.CTkButton(
     app,
     text="Show Pie Chart",
-    command=show_pie_chart
+    command=show_pie_chart,
+    width=220,
+    height=40
 )
 
-chart_button.pack(pady=5)
+chart_button.pack(pady=8)
 
 bar_chart_button = ctk.CTkButton(
     app,
     text="Show Bar Chart",
-    command=show_bar_chart
+    command=show_bar_chart,
+    width=220,
+    height=40
 )
 
-bar_chart_button.pack(pady=5)
+bar_chart_button.pack(pady=8)
 
 load_expenses()
 
