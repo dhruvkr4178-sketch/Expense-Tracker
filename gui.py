@@ -354,7 +354,8 @@ def edit_expense():
     print(category_entry.get())
     print(description_entry.get())
     print(amount_entry.get())   
-
+    app.lift()
+    app.focus_force() 
 
 def update_expense():
 
