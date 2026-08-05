@@ -12,6 +12,8 @@ app = ctk.CTk()
 expenses = []
 tree = None
 view_window = None
+filter_var = None
+filter_menu = None
 search_entry = None
 selected_expense = None
 app.title("Expense Tracker")
@@ -478,6 +480,32 @@ def clear_search():
 
     refresh_table()
 
+
+def filter_expense(choice):
+
+    if choice == "All":
+        refresh_table()
+        return
+
+    for item in tree.get_children():
+        tree.delete(item)
+
+    for expense in expenses:
+
+        if expense["category"] == choice:
+
+            tree.insert(
+                "",
+                "end",
+                values=(
+                    expense["date"],
+                    expense["category"],
+                    expense["description"],
+                    expense["amount"]
+                )
+            )
+
+
 def show_pie_chart():
 
     categories = {}
@@ -603,6 +631,36 @@ def view_expenses():
     show="headings",
     height=15
 )
+
+
+    global filter_var, filter_menu
+
+    filter_label = ctk.CTkLabel(
+    view_window,
+    text="Filter by Category"
+)
+
+    filter_label.pack()
+
+    filter_var = ctk.StringVar(value="All")
+
+    categories = ["All"]
+
+    for expense in expenses:
+
+       if expense["category"] not in categories:
+        categories.append(expense["category"])
+
+    filter_menu = ctk.CTkOptionMenu(
+    view_window,
+    variable=filter_var,
+    values=categories,
+    command=filter_expense
+)
+
+    filter_menu.pack(pady=5)
+
+
     
     tree.pack(fill="both", expand=True, padx=20, pady=20)
 
