@@ -403,6 +403,14 @@ def refresh_table():
             )
         )
 
+def close_view_window():
+    global view_window, tree
+
+    tree = None
+
+    view_window.destroy()
+
+    view_window = None
 
 def save_expenses():
 
@@ -582,6 +590,7 @@ def view_expenses():
         return
 
     view_window = ctk.CTkToplevel(app)
+    view_window.protocol("WM_DELETE_WINDOW", close_view_window)
     view_window.title("All Expenses")
     view_window.geometry("900x700")
     view_window.after(100, view_window.lift)
